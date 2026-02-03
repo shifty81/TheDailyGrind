@@ -121,14 +121,15 @@
     },
     "doors": {
       "walkable": true,
-      "blocks_vision_when_closed": true,
-      "blocks_projectiles_when_closed": true,
+      "blocks_vision": true,
+      "blocks_projectiles": true,
       "can_be_opened": true,
       "can_be_locked": true,
       "health_by_material": {
         "wood": 80,
         "reinforced": 150
-      }
+      },
+      "note": "blocks_vision and blocks_projectiles when closed, transparent when open"
     },
     "windows": {
       "walkable": false,

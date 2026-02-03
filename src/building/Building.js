@@ -138,7 +138,7 @@ class Building {
             structureType: 'hatch',
             material: 'wood',
             spriteSheet: 'greenlands_structures',
-            spriteIndex: 3,
+            spriteIndex: 3,  // Reuses door sprite as hatches are similar to horizontal doors
             walkable: true,
             blocksVision: false,
             canOpen: true,

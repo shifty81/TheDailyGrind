@@ -35,11 +35,11 @@ Get a sprite at a specific index (0-based).
 ```javascript
 {
     image: HTMLImageElement,  // Source image
-    sx: number,              // Source X coordinate
-    sy: number,              // Source Y coordinate  
-    width: number,           // Sprite width
-    height: number,          // Sprite height
-    index: number            // Original index
+    sx: number,               // Source X coordinate
+    sy: number,               // Source Y coordinate
+    width: number,            // Sprite width
+    height: number,           // Sprite height
+    index: number             // Original index
 }
 ```
 
