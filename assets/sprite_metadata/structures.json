@@ -1,0 +1,166 @@
+{
+  "description": "Building structure sprite sheets - walls, doors, windows, stairs, ladders, hatches",
+  "sheets": [
+    {
+      "name": "walls_rubble",
+      "file": "assets/TBD/loose_files/TileObjectsRubbleWalls.png",
+      "sprite_width": 64,
+      "sprite_height": 128,
+      "cols": 8,
+      "rows": 8,
+      "total_sprites": 64,
+      "usage": "Damaged/rubble wall variations for destroyed structures",
+      "materials": ["stone", "brick"]
+    },
+    {
+      "name": "greenlands_structures",
+      "file": "assets/TBD/loose_files/spr_Greenlands_iso_day_0.png",
+      "sprite_width": 64,
+      "sprite_height": 64,
+      "cols": 1,
+      "rows": 10,
+      "total_sprites": 10,
+      "usage": "Isometric structural elements including walls, fences, and barriers",
+      "materials": ["wood", "stone"]
+    }
+  ],
+  "structure_types": {
+    "walls": {
+      "wood": {
+        "sprite_sheet": "greenlands_structures",
+        "sprite_indices": [0, 1, 2],
+        "description": "Wooden wall variations"
+      },
+      "stone": {
+        "sprite_sheet": "walls_rubble",
+        "sprite_indices": [0, 1, 2, 3, 4, 5],
+        "description": "Stone wall variations including intact and damaged"
+      },
+      "brick": {
+        "sprite_sheet": "walls_rubble",
+        "sprite_indices": [8, 9, 10, 11],
+        "description": "Brick wall variations"
+      }
+    },
+    "doors": {
+      "wood": {
+        "sprite_sheet": "greenlands_structures",
+        "sprite_indices": [3, 4],
+        "description": "Wooden door (closed/open states)",
+        "states": ["closed", "open"]
+      },
+      "reinforced": {
+        "sprite_sheet": "greenlands_structures",
+        "sprite_indices": [5],
+        "description": "Reinforced door for security"
+      }
+    },
+    "windows": {
+      "glass": {
+        "sprite_sheet": "greenlands_structures",
+        "sprite_indices": [6],
+        "description": "Standard glass window"
+      },
+      "shuttered": {
+        "sprite_sheet": "greenlands_structures",
+        "sprite_indices": [7],
+        "description": "Window with shutters"
+      }
+    },
+    "stairs": {
+      "wood": {
+        "sprite_sheet": "greenlands_structures",
+        "sprite_indices": [8],
+        "description": "Wooden stairs",
+        "orientation": "vertical"
+      },
+      "stone": {
+        "sprite_sheet": "walls_rubble",
+        "sprite_indices": [16, 17],
+        "description": "Stone stairs",
+        "orientation": "vertical"
+      }
+    },
+    "ladders": {
+      "wood": {
+        "sprite_sheet": "greenlands_structures",
+        "sprite_indices": [9],
+        "description": "Wooden ladder for vertical access"
+      }
+    },
+    "hatches": {
+      "wood": {
+        "sprite_sheet": "greenlands_structures",
+        "sprite_indices": [3],
+        "description": "Wooden hatch/trapdoor",
+        "states": ["closed", "open"]
+      }
+    },
+    "floors": {
+      "wood": {
+        "description": "Wooden floor tiles - use existing ground_tiles system",
+        "reference": "ground_tiles.json"
+      },
+      "stone": {
+        "description": "Stone floor tiles - use existing ground_tiles system",
+        "reference": "ground_tiles.json"
+      }
+    }
+  },
+  "placement_rules": {
+    "walls": {
+      "walkable": false,
+      "blocks_vision": true,
+      "blocks_projectiles": true,
+      "can_be_destroyed": true,
+      "health_by_material": {
+        "wood": 100,
+        "stone": 200,
+        "brick": 150
+      }
+    },
+    "doors": {
+      "walkable": true,
+      "blocks_vision": true,
+      "blocks_projectiles": true,
+      "can_be_opened": true,
+      "can_be_locked": true,
+      "health_by_material": {
+        "wood": 80,
+        "reinforced": 150
+      },
+      "note": "blocks_vision and blocks_projectiles when closed, transparent when open"
+    },
+    "windows": {
+      "walkable": false,
+      "blocks_vision": false,
+      "blocks_projectiles": true,
+      "can_be_destroyed": true,
+      "health_by_material": {
+        "glass": 30,
+        "shuttered": 60
+      }
+    },
+    "stairs": {
+      "walkable": true,
+      "blocks_vision": false,
+      "connects_floors": true,
+      "health": 100
+    },
+    "ladders": {
+      "walkable": true,
+      "blocks_vision": false,
+      "connects_floors": true,
+      "climbable": true,
+      "health": 80
+    },
+    "hatches": {
+      "walkable": true,
+      "blocks_vision": false,
+      "connects_floors": true,
+      "can_be_opened": true,
+      "can_be_locked": true,
+      "health": 60
+    }
+  }
+}
