@@ -6,6 +6,7 @@ class AssetLoader {
     constructor() {
         this.images = new Map();
         this.audio = new Map();
+        this.spriteSheets = new Map();
         this.loaded = false;
         this.loadProgress = 0;
         this.totalAssets = 0;
@@ -199,6 +200,41 @@ class AssetLoader {
     }
     
     /**
+     * Load structure sprite sheets (walls, doors, windows, stairs, ladders, hatches)
+     */
+    async loadStructures() {
+        const structures = [
+            { name: 'walls_rubble', path: 'assets/TBD/loose_files/TileObjectsRubbleWalls.png' },
+            { name: 'greenlands_structures', path: 'assets/TBD/loose_files/spr_Greenlands_iso_day_0.png' }
+        ];
+        
+        this.totalAssets += structures.length;
+        
+        const promises = structures.map(asset => 
+            this.loadImage(asset.name, asset.path).catch(err => {
+                console.warn(`Skipping ${asset.name}: ${err.message}`);
+                return null;
+            })
+        );
+        
+        await Promise.all(promises);
+        
+        // Create SpriteSheet objects after loading the images
+        // Note: SpriteSheet class should be loaded before AssetLoader
+        if (typeof SpriteSheet !== 'undefined') {
+            const wallsRubbleImg = this.getImage('walls_rubble');
+            if (wallsRubbleImg) {
+                this.spriteSheets.set('walls_rubble', new SpriteSheet(wallsRubbleImg, 64, 128, 8, 8));
+            }
+            
+            const greenlandsImg = this.getImage('greenlands_structures');
+            if (greenlandsImg) {
+                this.spriteSheets.set('greenlands_structures', new SpriteSheet(greenlandsImg, 64, 64, 1, 10));
+            }
+        }
+    }
+    
+    /**
      * Load audio assets
      */
     async loadAudioAssets() {
@@ -233,6 +269,7 @@ class AssetLoader {
             await this.loadCharacters();
             await this.loadPlayerAnimations();
             await this.loadBuildings();
+            await this.loadStructures();
             await this.loadAudioAssets();
             
             this.loaded = true;
@@ -268,5 +305,12 @@ class AssetLoader {
      */
     getProgress() {
         return this.totalAssets > 0 ? this.loadProgress / this.totalAssets : 0;
+    }
+    
+    /**
+     * Get a sprite sheet by name
+     */
+    getSpriteSheet(name) {
+        return this.spriteSheets.get(name);
     }
 }

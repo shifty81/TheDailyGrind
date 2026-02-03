@@ -1,6 +1,6 @@
 /**
  * Building Class
- * Represents a building in the game
+ * Represents a building or structure in the game
  */
 class Building {
     static TYPES = {
@@ -33,6 +33,117 @@ class Building {
             leftColor: '#8b4513',
             rightColor: '#964b1a',
             sprite: 'treehouse' // Use treehouse sprite for warehouse
+        },
+        // Structure types
+        WALL_WOOD: {
+            name: 'Wooden Wall',
+            width: 1,
+            height: 1,
+            buildHeight: 48,
+            structureType: 'wall',
+            material: 'wood',
+            spriteSheet: 'greenlands_structures',
+            spriteIndex: 0,
+            walkable: false,
+            blocksVision: true,
+            health: 100
+        },
+        WALL_STONE: {
+            name: 'Stone Wall',
+            width: 1,
+            height: 1,
+            buildHeight: 48,
+            structureType: 'wall',
+            material: 'stone',
+            spriteSheet: 'walls_rubble',
+            spriteIndex: 0,
+            walkable: false,
+            blocksVision: true,
+            health: 200
+        },
+        WALL_BRICK: {
+            name: 'Brick Wall',
+            width: 1,
+            height: 1,
+            buildHeight: 48,
+            structureType: 'wall',
+            material: 'brick',
+            spriteSheet: 'walls_rubble',
+            spriteIndex: 8,
+            walkable: false,
+            blocksVision: true,
+            health: 150
+        },
+        DOOR_WOOD: {
+            name: 'Wooden Door',
+            width: 1,
+            height: 1,
+            buildHeight: 48,
+            structureType: 'door',
+            material: 'wood',
+            spriteSheet: 'greenlands_structures',
+            spriteIndex: 3,
+            walkable: true,
+            blocksVision: false,
+            canOpen: true,
+            health: 80
+        },
+        WINDOW_GLASS: {
+            name: 'Glass Window',
+            width: 1,
+            height: 1,
+            buildHeight: 32,
+            structureType: 'window',
+            material: 'glass',
+            spriteSheet: 'greenlands_structures',
+            spriteIndex: 6,
+            walkable: false,
+            blocksVision: false,
+            health: 30
+        },
+        STAIRS_WOOD: {
+            name: 'Wooden Stairs',
+            width: 1,
+            height: 1,
+            buildHeight: 32,
+            structureType: 'stairs',
+            material: 'wood',
+            spriteSheet: 'greenlands_structures',
+            spriteIndex: 8,
+            walkable: true,
+            blocksVision: false,
+            connectsFloors: true,
+            health: 100
+        },
+        LADDER_WOOD: {
+            name: 'Wooden Ladder',
+            width: 1,
+            height: 1,
+            buildHeight: 48,
+            structureType: 'ladder',
+            material: 'wood',
+            spriteSheet: 'greenlands_structures',
+            spriteIndex: 9,
+            walkable: true,
+            blocksVision: false,
+            climbable: true,
+            connectsFloors: true,
+            health: 80
+        },
+        HATCH_WOOD: {
+            name: 'Wooden Hatch',
+            width: 1,
+            height: 1,
+            buildHeight: 8,
+            structureType: 'hatch',
+            material: 'wood',
+            spriteSheet: 'greenlands_structures',
+            spriteIndex: 3,
+            walkable: true,
+            blocksVision: false,
+            canOpen: true,
+            connectsFloors: true,
+            health: 60
         }
     };
     
@@ -51,7 +162,35 @@ class Building {
     render(renderer, camera, isometricRenderer, tileScreenPos) {
         if (!this.constructed) return;
         
-        // Try to use sprite if available
+        // Check if this is a structure type (wall, door, window, etc.)
+        if (this.type.spriteSheet && this.type.spriteIndex !== undefined) {
+            // Use sprite sheet rendering for structures
+            if (this.assetLoader) {
+                const spriteSheet = this.assetLoader.getSpriteSheet(this.type.spriteSheet);
+                if (spriteSheet) {
+                    const sprite = spriteSheet.getSprite(this.type.spriteIndex);
+                    if (sprite) {
+                        const spriteX = tileScreenPos.x - sprite.width / 2 - camera.x;
+                        const spriteY = tileScreenPos.y - sprite.height + 16 - camera.y;
+                        
+                        renderer.ctx.drawImage(
+                            sprite.image,
+                            sprite.sx,
+                            sprite.sy,
+                            sprite.width,
+                            sprite.height,
+                            spriteX,
+                            spriteY,
+                            sprite.width,
+                            sprite.height
+                        );
+                        return;
+                    }
+                }
+            }
+        }
+        
+        // Try to use sprite if available (for traditional buildings)
         let buildingSprite = null;
         if (this.assetLoader && this.type.sprite) {
             buildingSprite = this.assetLoader.getImage(this.type.sprite);
